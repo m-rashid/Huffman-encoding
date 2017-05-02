@@ -1,0 +1,8 @@
+//
+// Created by Mustafa on 02/05/2017.
+//
+
+#ifndef ASSIGNMENT_3_HUFFMANNODE_H
+#define ASSIGNMENT_3_HUFFMANNODE_H
+
+#endif //ASSIGNMENT_3_HUFFMANNODE_H
