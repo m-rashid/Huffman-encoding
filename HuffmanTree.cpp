@@ -4,6 +4,8 @@
 
 #include <memory>
 #include <queue>
+#include <iostream>
+#include <fstream>
 #include "HuffmanTree.h"
 using namespace std;
 
@@ -92,6 +94,56 @@ namespace RSHMUS001 {
         }
     }
 
-    
+    void HuffmanTree::compress(string input , string output){
+        ifstream fin(input.c_str());
+        if (!fin){
+            cerr << "File open failed!" << endl;
+        }
+
+        string data;
+        string bitbuffer;
+
+        while (getline(fin, data)){
+            for (int i =0; i < data.length(); i++){
+                bitbuffer += codeTable[data[i]];
+            }
+        }
+
+
+        string output_hdr = output + ".hdr";
+        ofstream fout(output_hdr.c_str());
+        if (!fout){
+            cerr << "File open failed!" << endl;
+        }
+
+        fout << "Count: " << codeTable.size() << endl;
+
+        for(auto it = codeTable.begin(); it != codeTable.end(); ++it) {
+            fout << it->first << " : " << it->second << endl;
+        }
+
+        fout.close();
+
+
+        string output_bin = output + ".bin";
+        ofstream bout(output_bin.c_str());
+        bout << bitbuffer.c_str();
+
+        bout.close();
+
+        /*
+        while (!fin.eof()){
+
+            for (data ; getline(fin, data) ; ){
+                for (int i=0; i<data.length(); i++){
+                    output += codeTable[data[i]];
+                }
+            }
+
+        }
+         */
+    }
+
+
 }
 
