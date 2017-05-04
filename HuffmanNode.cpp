@@ -9,12 +9,12 @@ using namespace std;
 namespace RSHMUS001{
 
     //default constructor
-    HuffmanNode::HuffmanNode() : frequency(0), letter(0){
+    HuffmanNode::HuffmanNode() : frequency(0), letter(0), leftNode(nullptr), rightNode(nullptr){
 
     }
 
     //parametrized constructor
-    HuffmanNode::HuffmanNode(char l = '\0', int f = 0) : frequency(f), letter(l) {
+    HuffmanNode::HuffmanNode(char l = '\0', int f = 0) : frequency(f), letter(l), leftNode(nullptr), rightNode(nullptr) {
 
     }
 
@@ -68,5 +68,12 @@ namespace RSHMUS001{
         rightNode = make_shared<HuffmanNode>(r);
     }
 
+    shared_ptr<HuffmanNode> HuffmanNode::getLeft() const{
+        return leftNode;
+    }
+
+    shared_ptr<HuffmanNode> HuffmanNode::getRight() const{
+        return rightNode;
+    }
 }
 
