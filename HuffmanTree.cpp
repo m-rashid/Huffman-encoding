@@ -71,7 +71,25 @@ namespace RSHMUS001 {
         }
 
         root = make_shared<HuffmanNode>(pq.top());
-        
+
+    }
+
+    void HuffmanTree::generateCodeTable(shared_ptr<HuffmanNode> node, string code){
+
+        if (node != nullptr) {
+
+            if(node -> getLeft() != nullptr){
+                generateCodeTable(node -> getLeft(), code+"0");
+            }
+
+            if(node -> getLetter() != '\0'){
+                codeTable[node -> getLetter()] = code;
+            }
+
+            if(node -> getRight() != nullptr){
+                generateCodeTable(node -> getRight(), code+"1");
+            }
+        }
     }
 }
 
