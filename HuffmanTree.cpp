@@ -70,7 +70,8 @@ namespace RSHMUS001 {
             pq.push(parent);
         }
 
-
+        root = make_shared<HuffmanNode>(pq.top());
+        
     }
 }
 
