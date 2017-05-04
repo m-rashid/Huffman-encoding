@@ -18,6 +18,7 @@ namespace RSHMUS001{
 
     }
 
+    //destructor
     HuffmanNode::~HuffmanNode(){
 
     }
@@ -32,11 +33,11 @@ namespace RSHMUS001{
         rhs.frequency = 0;
     }
 
-    char HuffmanNode::getLetter(){
+    char HuffmanNode::getLetter() const {
         return letter;
     }
 
-    int HuffmanNode::getFrequency(){
+    int HuffmanNode::getFrequency() const {
         return frequency;
     }
 
@@ -47,5 +48,25 @@ namespace RSHMUS001{
     void HuffmanNode::setFreq(int f) {
         frequency = f;
     }
+
+    /*
+    bool HuffmanNode::compare(HuffmanNode a, HuffmanNode b){
+        if((a.getFrequency() < b.getFrequency())){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+     */
+
+    void HuffmanNode::setLeft(HuffmanNode l) {
+        leftNode = make_shared<HuffmanNode>(l);
+    }
+
+    void HuffmanNode::setRight(HuffmanNode r) {
+        rightNode = make_shared<HuffmanNode>(r);
+    }
+
 }
 

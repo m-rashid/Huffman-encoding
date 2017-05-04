@@ -14,8 +14,8 @@ namespace RSHMUS001 {
     private:
         char letter;
         int frequency;
-        std::shared_ptr<HuffmanNode> left;
-        std::shared_ptr<HuffmanNode> right;
+        std::shared_ptr<HuffmanNode> leftNode;
+        std::shared_ptr<HuffmanNode> rightNode;
 
     public:
         HuffmanNode();                          //default constructor
@@ -24,14 +24,19 @@ namespace RSHMUS001 {
         HuffmanNode(const HuffmanNode& node);   //copy constructor
         HuffmanNode(HuffmanNode&& node);        //move constructor
 
+        void setRight (HuffmanNode r);
+        void setLeft (HuffmanNode l);
+
         //accessors
-        char getLetter();
-        int getFrequency();
+        char getLetter() const ;
+        int getFrequency() const ;
 
         //mutators
         void setLetter(char l);
         void setFreq(int f);
 
     };
+
+
 }
 #endif //_HUFFMANNODE_H
