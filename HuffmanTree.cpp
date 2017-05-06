@@ -6,13 +6,14 @@
 #include <queue>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <unordered_map>
 #include "HuffmanTree.h"
 using namespace std;
 
 namespace RSHMUS001 {
 
-    HuffmanTree::HuffmanTree() : root(nullptr) {}; //default constructor
+    HuffmanTree::HuffmanTree() {}; //default constructor
 
     HuffmanTree::HuffmanTree(const HuffmanTree & rhs) : root(rhs.root) {    //copy constructor
 
@@ -39,9 +40,9 @@ namespace RSHMUS001 {
 
     struct compare
     {
-        bool operator()(const HuffmanNode& a, const HuffmanNode& b)
+        bool operator()(const shared_ptr<HuffmanNode>& a, const shared_ptr<HuffmanNode>& b)
         {
-            return a.getFrequency() < b.getFrequency();
+            return a->getFrequency() > b->getFrequency();
         }
     };
 
@@ -49,32 +50,29 @@ namespace RSHMUS001 {
     void HuffmanTree::buildTree(unordered_map<char, int> & frequencyTable){
       //cout << "In buildTree method" << endl;
 
-        priority_queue<HuffmanNode,vector<HuffmanNode>, compare > pq;
+        priority_queue<shared_ptr<HuffmanNode>, vector<shared_ptr<HuffmanNode>>, compare> pq;
 
         for(auto it = frequencyTable.begin(); it != frequencyTable.end(); ++it){
             char l = it -> first;
             int f = it -> second;
-            HuffmanNode node (l, f);
+            shared_ptr<HuffmanNode> node (new HuffmanNode(l, f));
             pq.push(node);
         }
 
         while (pq.size() > 1){
 
-            HuffmanNode parent;
-            HuffmanNode l = pq.top(); //left child
+            shared_ptr<HuffmanNode> parent (new HuffmanNode('\0', 0));
+            shared_ptr<HuffmanNode> l = pq.top(); //left child
+            parent->setLeft(l);
             pq.pop();
-            HuffmanNode r = pq.top(); //right child
+            shared_ptr<HuffmanNode> r = pq.top(); //right child
+            parent->setRight(r);
             pq.pop();
-
-            parent.setLeft(l);
-            parent.setRight(r);
-            parent.setFreq(l.getFrequency() + r.getFrequency());
-            parent.setLetter('\0');
-
+            parent->setFreq(l->getFrequency() + r->getFrequency());
             pq.push(parent);
         }
 
-        root = make_shared<HuffmanNode>(pq.top());
+        root = pq.top();
 
     }
 
@@ -82,15 +80,13 @@ namespace RSHMUS001 {
       //cout << "In generateCodeTable method" << endl;
 
         if (node != nullptr) {
-
+            //cout << "node != nullptr" << endl;
             if(node -> getLeft() != nullptr){
                 generateCodeTable(node -> getLeft(), code+"0");
             }
 
             if(node -> getLetter() != '\0'){
                 codeTable[node -> getLetter()] = code;
-                //codeTable.insert(std::make_pair(node->getLetter(), code));
-          			code = "";
             }
 
             if(node -> getRight() != nullptr){
@@ -101,7 +97,7 @@ namespace RSHMUS001 {
 
     void HuffmanTree::compress(string input , string output){
 
-        cout << "In compress method" << endl;
+        //cout << "In compress method" << endl;
 
         ifstream fin(input.c_str());
         if (!fin){
@@ -128,15 +124,15 @@ namespace RSHMUS001 {
 
         fout << "Count: " << codeTable.size() << endl;
 
-        for (pair<char, string> element : codeTable){
-            fout << element.first<< " : " << element.second << endl;
+        for(auto it = codeTable.begin(); it != codeTable.end(); ++it) {
+            //fout << it->first << " : " << it->second << endl;
+            stringstream ss;
+            ss << it->first;
+            string c;
+            ss >> c;
+            fout << c << " : " << it->second << endl;
         }
 
-        /*
-        for(auto it = codeTable.begin(); it != codeTable.end(); ++it) {
-            fout << it->first << " : " << it->second << endl;
-        }
-        */
         fout.close();
 
 
