@@ -6,6 +6,7 @@
 #include <queue>
 #include <iostream>
 #include <fstream>
+#include <unordered_map>
 #include "HuffmanTree.h"
 using namespace std;
 
@@ -46,6 +47,7 @@ namespace RSHMUS001 {
 
 
     void HuffmanTree::buildTree(unordered_map<char, int> & frequencyTable){
+      //cout << "In buildTree method" << endl;
 
         priority_queue<HuffmanNode,vector<HuffmanNode>, compare > pq;
 
@@ -62,7 +64,7 @@ namespace RSHMUS001 {
             HuffmanNode l = pq.top(); //left child
             pq.pop();
             HuffmanNode r = pq.top(); //right child
-            pq.top();
+            pq.pop();
 
             parent.setLeft(l);
             parent.setRight(r);
@@ -77,6 +79,7 @@ namespace RSHMUS001 {
     }
 
     void HuffmanTree::generateCodeTable(shared_ptr<HuffmanNode> node, string code){
+      //cout << "In generateCodeTable method" << endl;
 
         if (node != nullptr) {
 
@@ -86,6 +89,8 @@ namespace RSHMUS001 {
 
             if(node -> getLetter() != '\0'){
                 codeTable[node -> getLetter()] = code;
+                //codeTable.insert(std::make_pair(node->getLetter(), code));
+          			code = "";
             }
 
             if(node -> getRight() != nullptr){
@@ -95,6 +100,9 @@ namespace RSHMUS001 {
     }
 
     void HuffmanTree::compress(string input , string output){
+
+        cout << "In compress method" << endl;
+
         ifstream fin(input.c_str());
         if (!fin){
             cerr << "File open failed!" << endl;
@@ -102,13 +110,15 @@ namespace RSHMUS001 {
 
         string data;
         string bitbuffer;
+        int numChars = 0;
 
         while (getline(fin, data)){
             for (int i =0; i < data.length(); i++){
+                //cout << data[i] << endl;
                 bitbuffer += codeTable[data[i]];
+                numChars++;
             }
         }
-
 
         string output_hdr = output + ".hdr";
         ofstream fout(output_hdr.c_str());
@@ -118,10 +128,15 @@ namespace RSHMUS001 {
 
         fout << "Count: " << codeTable.size() << endl;
 
+        for (pair<char, string> element : codeTable){
+            fout << element.first<< " : " << element.second << endl;
+        }
+
+        /*
         for(auto it = codeTable.begin(); it != codeTable.end(); ++it) {
             fout << it->first << " : " << it->second << endl;
         }
-
+        */
         fout.close();
 
 
@@ -130,6 +145,8 @@ namespace RSHMUS001 {
         bout << bitbuffer.c_str();
 
         bout.close();
+
+        cout << "Compression Ratio: " << (bitbuffer.length())/numChars << endl;
 
         /*
         while (!fin.eof()){
@@ -144,6 +161,32 @@ namespace RSHMUS001 {
          */
     }
 
+    std::shared_ptr<HuffmanNode> HuffmanTree::getRoot() const {
+        return root;
+    }
+
+    HuffmanTree & HuffmanTree::operator = (const HuffmanTree & rhs){
+        if (this != &rhs) {
+            root = rhs.root;
+            codeTable = rhs.codeTable;
+        }
+        return *this;
+    }
+
+    HuffmanTree & HuffmanTree::operator = (HuffmanTree && rhs) //Move assignment operator
+    {
+
+        if (this != &rhs) {
+
+            root = rhs.root;
+            codeTable = rhs.codeTable;
+
+            rhs.root = nullptr;
+
+        }
+        return *this;
+
+    }
+
 
 }
-
